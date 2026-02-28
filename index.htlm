@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rē'bərTH | Aftercare Night Serum | Delhi NCR</title>
+<meta name="description" content="Premium handcrafted Aftercare Night Serum by rē'bərTH. Authentic essential oil face serum available in Delhi NCR. Order online.">
+<meta property="og:title" content="rē'bərTH - Aftercare Night Serum">
+<meta property="og:description" content="Luxury handcrafted face serum. Order directly on WhatsApp.">
+<meta property="og:image" content="https://i.ibb.co/pr3Lj5mv/Whats-App-Image-2026-02-23-at-10-51-34-PM.jpg">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+ --beige:#f5e9da;
+ --white:#ffffff;
+ --accent:#d6bfa7;
+ --dark:#333;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:var(--beige);color:var(--dark);}
+
+header{
+ background:var(--white);
+ padding:18px;
+ text-align:center;
+ box-shadow:0 2px 10px rgba(0,0,0,0.05);
+ position:sticky;top:0;z-index:100;
+}
+header h1{font-size:26px;}
+header p{font-size:13px;color:#777;}
+
+.container{padding:15px;}
+
+.products{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+ gap:15px;
+}
+
+.card{
+ background:var(--white);
+ padding:12px;
+ border-radius:14px;
+ box-shadow:0 6px 15px rgba(0,0,0,0.05);
+ position:relative;
+}
+
+.badge{
+ position:absolute;
+ top:10px;
+ left:10px;
+ background:#ff7675;
+ color:white;
+ font-size:11px;
+ padding:3px 8px;
+ border-radius:20px;
+}
+
+.card img{width:100%;border-radius:10px;}
+.card h3{font-size:14px;margin:8px 0;}
+.card p{font-size:12px;color:#666;}
+.price{font-weight:600;margin:5px 0;}
+.stock{font-size:12px;color:#e17055;}
+
+.card button{
+ background:var(--accent);
+ border:none;
+ padding:8px;
+ width:100%;
+ border-radius:8px;
+ color:white;
+ cursor:pointer;
+}
+
+.cart-btn{
+ position:fixed;
+ bottom:20px;
+ right:20px;
+ background:var(--accent);
+ color:white;
+ width:60px;height:60px;
+ border-radius:50%;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:22px;
+ cursor:pointer;
+}
+.count{
+ position:absolute;
+ top:-5px;right:-5px;
+ background:red;color:white;
+ width:22px;height:22px;
+ font-size:12px;
+ display:flex;align-items:center;justify-content:center;
+ border-radius:50%;
+}
+
+.cart{
+ position:fixed;
+ bottom:-100%;
+ left:0;right:0;
+ background:white;
+ max-height:80vh;
+ padding:15px;
+ transition:0.4s;
+ overflow:auto;
+ border-radius:20px 20px 0 0;
+}
+.cart.active{bottom:0;}
+
+.toast{
+ position:fixed;
+ top:20px;
+ left:50%;
+ transform:translateX(-50%);
+ background:black;
+ color:white;
+ padding:10px 20px;
+ border-radius:20px;
+ display:none;
+}
+
+.whatsapp{
+ position:fixed;
+ bottom:20px;
+ left:20px;
+ background:#25D366;
+ color:white;
+ padding:10px 15px;
+ border-radius:25px;
+ text-decoration:none;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>rē'bərTH</h1>
+<p>Aftercare Night Serum | Delhi NCR</p>
+</header>
+
+<div class="container">
+<div class="products" id="products"></div>
+</div>
+
+<div class="cart-btn" onclick="toggleCart()">🛒
+<div class="count" id="count">0</div>
+</div>
+
+<a class="whatsapp" href="#" onclick="sendWhatsApp()">Chat on WhatsApp</a>
+
+<div class="cart" id="cart">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+<input type="text" id="coupon" placeholder="Enter Coupon Code">
+<button onclick="applyCoupon()">Apply Coupon</button>
+<h4 id="total">Total: ₹0</h4>
+
+<form id="orderForm" action="https://formspree.io/f/xkovagow" method="POST">
+<input type="hidden" name="order_summary" id="summary">
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="phone" placeholder="Phone" required>
+<textarea name="address" placeholder="Address" required></textarea>
+<button type="submit">Place Order</button>
+</form>
+</div>
+
+<div class="toast" id="toast">Added to cart</div>
+
+<script>
+
+const productData = Array(8).fill().map((_,i)=>({
+ name:"Rebarth Face Serum (25 ml)",
+ price:349,
+ stock:10-i,
+ image:"https://i.ibb.co/pr3Lj5mv/Whats-App-Image-2026-02-23-at-10-51-34-PM.jpg",
+ description:"Authentic handcrafted essential oil serum"
+}));
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let discount=0;
+
+function showToast(msg){
+ const t=document.getElementById("toast");
+ t.innerText=msg;
+ t.style.display="block";
+ setTimeout(()=>t.style.display="none",2000);
+}
+
+function loadProducts(){
+ const container=document.getElementById("products");
+ productData.forEach((p,i)=>{
+ container.innerHTML+=`
+ <div class="card">
+  ${i==0?'<div class="badge">Best Seller</div>':''}
+  <img src="${p.image}" loading="lazy" alt="Rebarth Face Serum 25ml">
+  <h3>${p.name}</h3>
+  <p>${p.description}</p>
+  <div class="price">₹${p.price}</div>
+  <div class="stock">Only ${p.stock} left</div>
+  <button onclick="addToCart(${i})">Add to Cart</button>
+ </div>`;
+ });
+}
+
+function addToCart(i){
+ let p=productData[i];
+ let existing=cart.find(item=>item.index===i);
+ if(existing){
+  if(existing.qty<p.stock){existing.qty++;}
+  else return showToast("Stock limit reached");
+ }else{
+  cart.push({index:i,qty:1});
+ }
+ updateCart();
+ showToast("Added to cart");
+}
+
+function updateCart(){
+ localStorage.setItem("cart",JSON.stringify(cart));
+ document.getElementById("count").innerText=cart.reduce((a,b)=>a+b.qty,0);
+ let itemsHTML="";
+ let total=0;
+ cart.forEach(item=>{
+  let p=productData[item.index];
+  total+=p.price*item.qty;
+  itemsHTML+=`<div>${p.name} x ${item.qty}</div>`;
+ });
+ total-=discount;
+ document.getElementById("cartItems").innerHTML=itemsHTML;
+ document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+function toggleCart(){
+ document.getElementById("cart").classList.toggle("active");
+}
+
+function applyCoupon(){
+ let code=document.getElementById("coupon").value;
+ if(code==="REBIRTH10"){
+  discount=50;
+  showToast("Coupon Applied!");
+ }else{
+  discount=0;
+  showToast("Invalid Coupon");
+ }
+ updateCart();
+}
+
+function sendWhatsApp(){
+ let message="Order from rē'bərTH:%0A";
+ let total=0;
+ cart.forEach(item=>{
+  let p=productData[item.index];
+  total+=p.price*item.qty;
+  message+=`${p.name} x ${item.qty}%0A`;
+ });
+ message+=`Total: ₹${total-discount}`;
+ window.open(`https://wa.me/917987714906?text=${message}`);
+}
+
+document.getElementById("orderForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ let text="";
+ let total=0;
+ cart.forEach(item=>{
+  let p=productData[item.index];
+  total+=p.price*item.qty;
+  text+=`${p.name} x ${item.qty} - ₹${p.price*item.qty}\n`;
+ });
+ text+=`\nTotal: ₹${total-discount}`;
+ document.getElementById("summary").value=text;
+ fetch(this.action,{
+  method:"POST",
+  body:new FormData(this),
+  headers:{'Accept':'application/json'}
+ }).then(res=>{
+  if(res.ok){
+   cart=[];
+   discount=0;
+   updateCart();
+   alert("Order placed! We will contact you on WhatsApp.");
+  }
+ });
+});
+
+loadProducts();
+updateCart();
+
+</script>
+</body>
+</html>
